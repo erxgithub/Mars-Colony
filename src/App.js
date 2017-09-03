@@ -5,48 +5,7 @@ import axios from 'axios';
 
 const Home = () => (
   <div>
-    <h2>Home</h2>
-  </div>
-)
-
-// const About = () => (
-//   <div>
-//     <h2>About</h2>
-//     <code>{this.getEncounters()}</code>
-//   </div>
-// )
-
-const Topic = ({ match }) => (
-  <div>
-    <h3>{match.params.topicId}</h3>
-  </div>
-)
-
-const Topics = ({ match }) => (
-  <div>
-    <h2>Topics</h2>
-    <ul>
-      <li>
-        <Link to={`${match.url}/rendering`}>
-          Rendering with React
-        </Link>
-      </li>
-      <li>
-        <Link to={`${match.url}/components`}>
-          Components
-        </Link>
-      </li>
-      <li>
-        <Link to={`${match.url}/props-v-state`}>
-          Props v. State
-        </Link>
-      </li>
-    </ul>
-
-    <Route path={`${match.url}/:topicId`} component={Topic}/>
-    <Route exact path={match.url} render={() => (
-      <h3>Please select a topic.</h3>
-    )}/>
+    <h2>Welcome to Mars Colony!</h2>
   </div>
 )
 
@@ -63,7 +22,7 @@ class App extends Component {
     }
 
     componentDidMount() {
-        console.log("Component mounted.");
+        console.log("App - component mounted.");
 
         //this.getEncounters();
         //this.getColonists();
@@ -160,7 +119,6 @@ class App extends Component {
 
             return (
                 <div className="App">
-                <MainMenu />
                     <div>
                         {colonists.map(colonist => <h6 key={colonist.id}>{colonist.id}, {colonist.name}, {colonist.age}, {colonist.job.id}, {colonist.job.name}, {colonist.job.description}</h6>)}
                     </div>
@@ -193,18 +151,6 @@ class App extends Component {
             return (
                 <Router>
                   <div>
-                    <ul>
-                      <li><Link to="/">Home</Link></li>
-                      <li><Link to="/about">About</Link></li>
-                      <li><Link to="/topics">Topics</Link></li>
-                    </ul>
-
-                    <hr/>
-
-                    <Route exact path="/" component={Home}/>
-                    <Route path="/about" component={this.About}/>
-                    <Route path="/topics" component={Topics}/>
-
                     <div className="App">
                         <div>
                             {recents.map(encounter => <h6 key={encounter.id}>{encounter.id}, {encounter.date}, {encounter.job_id}, {encounter.atype}, {encounter.action}</h6>)}
@@ -215,77 +161,114 @@ class App extends Component {
             );
         } else {
             return (
-                <MainMenu />
+                <Router>
+                    <div className="App">
+
+                        <div className="container">
+                            <ul className="main-menu">
+                                <li><Link to="/">Home</Link></li>
+                            </ul>
+
+                            <div className="dropdown">
+                                <button className="dropbtn">Colonists</button>
+                                <div className="dropdown-content">
+                                    <ul>
+                                        <li><Link to="/newcolonist">Register New</Link></li>
+                                        <li><Link to="/listcolonists">Listing</Link></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div className="dropdown">
+                                <button className="dropbtn">Encounters</button>
+                                <div className="dropdown-content">
+                                    <ul>
+                                        <li><Link to="/newencounter">Report New</Link></li>
+                                        <li><Link to="/recentencounters">List Recent</Link></li>
+                                    </ul>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <Route exact path="/" component={Home}/>
+                        <Route path="/newcolonist" component={NewColonist}/>
+                        <Route path="/newencounter" component={NewEncounter}/>
+                    </div>
+                </Router>
             );
         }
     }
 }
 
-class MainMenu extends Component {
-    render() {
-            return (
-                <Router>
-                <div className="App">
-                <ul>
-                  <li><Link to="/">Home</Link></li>
-                  <li><Link to="/encounters">Encounters</Link></li>
-                  <li><Link to="/colonists">Colonists</Link></li>
-                </ul>
-
-                <hr/>
-
-                <Route exact path="/" component={Home}/>
-                <Route path="/encounters" component={Encounters}/>
-                <Route path="/colonists" component={Colonists}/>
-                </div>
-                </Router>
-            );
-        }
-}
-
-class Colonists extends Component {
+class NewColonist extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            colonist: []
+            response: [],
+            jobs: [],
+            name: '',
+            age: '',
+            job_id: ''
         }
     }
 
     componentDidMount() {
-        console.log("Component mounted.");
+        console.log("Colonists - component mounted.");
 
         //this.getEncounters();
-        this.postColonist();
+        //this.postColonist();
         //this.getColonists();
-        //this.getJobs();
+        this.getJobs();
         //this.getAliens();
         //this.getColonists();
         //this.postEncounter();
     }
 
-    getColonists() {
-        axios.get('https://red-wdp-api.herokuapp.com/api/mars/colonists')
+    getJobs() {
+        axios.get('https://red-wdp-api.herokuapp.com/api/mars/jobs')
             .then((response) => {
-                this.setState({colonists: response.data.colonists});
-                //console.log(response);
+                this.setState({
+                    jobs: response.data.jobs,
+                    job_id: response.data.jobs[0].id
+                });
+                console.log(response);
             })
             .catch(function (error) {
                 console.log(error);
             });
     }
 
+    handleChange(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+    }
+
+    handleSubmit(event) {
+        console.log('Input values: ' + this.state.name + ' / ' + this.state.age + ' / ' + this.state.job_id);
+        this.postColonist();
+        event.preventDefault();
+    }
+
     postColonist() {
         axios.post('https://red-wdp-api.herokuapp.com/api/mars/colonists', {
             "colonist" : {
-                "name" : "Jimbo",
-                "age" : "35",
-                "job_id" : "1"
+                "name" : this.state.name,
+                "age" : this.state.age,
+                "job_id" : this.state.job_id
             }
         })
-        .then(function (response) {
-            this.setState({colonist: response.data.colonist});
-            console.log(response);
+        .then((response) => {
+            if (response) {
+                //console.log(response);
+                this.setState({response: response});
+            }
         })
         .catch(function (error) {
             console.log(error);
@@ -293,14 +276,215 @@ class Colonists extends Component {
     }
 
     render() {
-            //let colonist = this.state.colonist;
+        console.log(this.state.response);
+        if (this.state.response.data !== undefined) {
+            let colonist = this.state.response.data.colonist;
+            console.log(colonist);
 
             return (
                 <div className="App">
                     <div>
+                        <h6>{colonist.id}, {colonist.name}, {colonist.age}, {colonist.job.id}, {colonist.job.name}, {colonist.job.description}</h6>
                     </div>
                 </div>
             );
+        } else if (this.state.jobs.length > 0) {
+            let jobs = this.state.jobs;
+
+            return (
+                <form onSubmit={(event) => this.handleSubmit(event)}>
+                    <br />
+                    <label>Name:</label>
+                    <input
+                        name="name"
+                        type="text"
+                        value={this.state.name}
+                        required
+                        onChange={(event) => this.handleChange(event)} />
+                    <br />
+                    <label>Age:</label>
+                    <input
+                        name="age"
+                        type="number"
+                        value={this.state.age}
+                        required
+                        onChange={(event)=>this.handleChange(event)} />
+                    <br />
+                    <label>Job:</label>
+                    <select name="job_id" value={this.state.job_id} onChange={(event) => this.handleChange(event)}>
+                        {jobs.map(job => <option key={job.id} value={job.id}>{job.name}</option>)}
+                    </select>
+                    <br />
+                    <input type="submit" value="Submit" />
+                    <br />
+                    <br />
+                </form>
+            );
+        } else {
+            return(
+                <div>
+                </div>
+            );
+        }
+    }
+}
+
+class NewEncounter extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            response: [],
+            aliens: [],
+            colonist_id: '',
+            date: '',
+            alien_id: '',
+            alien_type: '',
+            action: ''
+        }
+    }
+
+    componentDidMount() {
+        console.log("Colonists - component mounted.");
+
+        //this.getEncounters();
+        //this.postColonist();
+        //this.getColonists();
+        //this.getJobs();
+        this.getAliens();
+        //this.getColonists();
+        //this.postEncounter();
+    }
+
+    getAliens() {
+        axios.get('https://red-wdp-api.herokuapp.com/api/mars/aliens')
+            .then((response) => {
+                this.setState({
+                    aliens: response.data.aliens,
+                    alien_type: response.data.aliens[0].type
+                });
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    handleChange(event) {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+
+        this.setState({
+            [name]: value
+        });
+    }
+
+    handleSubmit(event) {
+        console.log('Input values: ' + this.state.colonist_id + ' / ' + this.state.date + ' / ' + this.state.alien_type + ' / ' + this.state.action);
+        this.postEncounter();
+        event.preventDefault();
+    }
+
+    postEncounter() {
+        axios.post('https://red-wdp-api.herokuapp.com/api/mars/encounters', {
+            "encounter" : {
+                "atype" : this.state.alien_type,
+                "date" : this.state.date,
+                "action" : this.state.action,
+                "colonist_id" : this.state.colonist_id
+            }
+        })
+        .then((response) => {
+            if (response) {
+                //console.log(response);
+                this.setState({response: response});
+            }
+        })
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    render() {
+        console.log(this.state.response);
+        if (this.state.response.data !== undefined) {
+            let encounter = this.state.response.data.encounter;
+            console.log(encounter);
+
+            return (
+                <div className="App">
+                    <p>Your encounter report has been submitted.</p>
+                    <br />
+                    <div className="report-line">
+                        <div>
+                            <span><b>Encounter ID</b></span>
+                            <span><b>Date</b></span>
+                            <span><b>Colonist ID</b></span>
+                            <span><b>Alien Type</b></span>
+                            <span><b>Action Taken</b></span>
+                        </div>
+                    </div>
+                    <div className="report-line">
+                        <div>
+                            <span>{encounter.id}</span>
+                            <span>{encounter.date}</span>
+                            <span>{encounter.colonist_id}</span>
+                            <span>{encounter.atype}</span>
+                            <span>{encounter.action}</span>
+                        </div>
+                    </div>
+                </div>
+            );
+        } else if (this.state.aliens.length > 0) {
+            let aliens = this.state.aliens;
+            console.log(this.state.alien_id);
+
+            return (
+                <form onSubmit={(event) => this.handleSubmit(event)}>
+                    <br />
+                    <div>
+                    <label>Colonist ID:</label>
+                    <input
+                        name="colonist_id"
+                        type="text"
+                        value={this.state.colonist_id}
+                        placeholder="Colonist ID"
+                        required
+                        onChange={(event) => this.handleChange(event)} />
+                    </div>
+                    <br />
+                    <label>Date:</label>
+                    <input
+                        name="date"
+                        type="date"
+                        value={this.state.date}
+                        required
+                        onChange={(event)=>this.handleChange(event)} />
+                    <br />
+                    <label>Alien Type:</label>
+                    <select name="alien_type" value={this.state.alien_type} onChange={(event) => this.handleChange(event)}>
+                        {aliens.map(alien => <option key={alien.id} value={alien.type}>{alien.type}</option>)}
+                    </select>
+                    <br />
+                    <label>Action Taken:<br /></label>
+                    <textarea
+                        name="action"
+                        value={this.state.action}
+                        required
+                        onChange={(event) => this.handleChange(event)} />
+                    <br />
+                    <input type="submit" value="Submit" />
+                    <br />
+                    <br />
+                </form>
+            );
+        } else {
+            return(
+                <div>
+                </div>
+            );
+        }
     }
 }
 
