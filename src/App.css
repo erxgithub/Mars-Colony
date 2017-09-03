@@ -1,4 +1,8 @@
-/* background image */
+/***************************/
+/*  App.css (Eric Gregor)  */
+/***************************/
+
+/* application setup */
 
 html {
     background: url("./assets/images/NASA_Mars_Rover.jpg") no-repeat center center fixed;
@@ -8,36 +12,101 @@ html {
     background-size: cover;
 }
 
-.report-heading div {
-    display: flex;
-    color: black;
-    margin-left: 1rem;
+h3 {
+    font-size: 1.25rem;
+    margin: 0 0 0 9.75rem;
 }
 
-.report-line div {
-    display: flex;
+h4 {
+    font-size: 1.25rem;
+    margin: 0 0 0 1rem;
+}
+
+h5 {
+    font-size: 1.25rem;
+    margin: 0.5rem 0 0 0.5rem;
     color: red;
-    margin-left: 1rem;
 }
 
-.report-column div span:nth-child(1) {
-    width: 6rem;
+/* main menu */
+
+.main-menu {
+    display: flex;
+    margin: 0;
 }
 
-.report-column div span:nth-child(2) {
-    width: 7rem;
+.container {
+	display: flex;
+    overflow: hidden;
+    background-color: black;
+    font-family: Sans-Serif;
+    list-style-type: none;
+    color: white;
 }
 
-.report-column div span:nth-child(3) {
-    width: 5rem;
+.container li {
+    font-size: 16px;
+    text-align: center;
+    padding: 14px 16px;
+    list-style-type: none;
+    text-decoration: none;
 }
 
-.report-column div span:nth-child(4) {
-    width: 10rem;
+.container a {
+    color: white;
+    list-style-type: none;
+    text-decoration: none;
 }
 
-.report-column div span:nth-child(5) {
-    width: 25rem;
+.dropdown {
+    overflow: hidden;
+}
+
+.dropdown .dropdown-button {
+    font-size: 16px;
+    border: none;
+    outline: none;
+    color: white;
+    padding: 14px 16px;
+    background-color: inherit;
+}
+
+.dropdown-button {
+    display: flex;
+}
+
+.container li:hover, .dropdown:hover .dropdown-button {
+    background-color: red;
+    list-style-type: none;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: black;
+    min-width: 120px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+}
+
+.dropdown-content ul {
+    padding: 0;
+}
+
+.dropdown-content li {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+    text-align: left;
+}
+
+.dropdown-content li:hover {
+    background-color: red;
+}
+
+.dropdown:hover .dropdown-content {
+    display: block;
 }
 
 /* welcome message animation */
@@ -81,29 +150,17 @@ h2 {
     to {color: red;}
 }
 
+/* input forms */
+
 label {
-  display: inline-block;
-  width: 9rem;
-  text-align: right;
-  vertical-align: top;
-  font-size: 1.25rem;
-  color: black;
-  margin: 0.5rem 0.25rem 0.25rem 0.25rem;
+    display: inline-block;
+    width: 9rem;
+    text-align: right;
+    vertical-align: top;
+    font-size: 1.25rem;
+    color: black;
+    margin: 0.5rem 0.25rem 0.25rem 0.25rem;
 }​
-
-.App h3, h4 {
-    margin: 0;
-}
-
-h3 {
-    font-size: 1.25rem;
-    margin: 0 0 0 9.75rem;
-}
-
-h4 {
-    font-size: 1.25rem;
-    margin: 0 0 0 1rem;
-}
 
 .App input {
     font-size: 3rem;
@@ -178,90 +235,82 @@ textarea:focus {
     border: 3px solid red;
 }
 
-/* main menu */
+/* api post confirmation */
 
-.main-menu {
+.post-response div {
     display: flex;
-    margin: 0;
+    font-size: 1.25rem;
 }
 
-.container {
-	display: flex;
-    overflow: hidden;
-    /*background-color: #333;*/
+/* listing setup */
+
+.report-background {
     background-color: black;
-    font-family: Sans-Serif;
-    list-style-type: none;
-    color: white;
+    opacity: 0.7;
+    max-width: 60rem;
 }
 
-.container li {
-    /*float: left;*/
-    font-size: 16px;
-    /*color: white;*/
-    text-align: center;
-    padding: 14px 16px;
-    list-style-type: none;
-    text-decoration: none;
+.report-background h4 {
+    font-size: 1.25rem;
+    margin: 0 0 0 1rem;
+    color: red;
 }
 
-.container a {
-    color: white;
-    list-style-type: none;
-    text-decoration: none;
-}
-
-.dropdown {
-    /*float: left;*/
-    overflow: hidden;
-}
-
-.dropdown .dropbtn {
-    font-size: 16px;
-    border: none;
-    outline: none;
-    color: white;
-    padding: 14px 16px;
-    background-color: inherit;
-}
-
-.dropbtn {
+.report-heading h6 {
     display: flex;
+    color: red;
+    font-size: 1.25rem;
+    text-decoration: underline;
+    margin: 0 0 0 1rem;
 }
 
-.container li:hover, .dropdown:hover .dropbtn {
-    background-color: red;
-    list-style-type: none;
+.report-line div h6 {
+    display: flex;
+    color: red;
+    font-size: 1.25rem;
+    margin: 0 0 0 1rem;
 }
 
-.dropdown-content {
-    display: none;
-    position: absolute;
-    /*background-color: #f9f9f9;*/
-    background-color: black;
-    min-width: 120px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 1;
+/* colonist listing - column widths */
+
+.colonist-report-column h6 span:nth-child(1) {
+    width: 3rem; /* colonist ID */
 }
 
-.dropdown-content ul {
-    padding: 0;
+.colonist-report-column h6 span:nth-child(2) {
+    width: 12rem; /* name */
 }
 
-.dropdown-content li {
-    /*float: none;*/
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
+.colonist-report-column h6 span:nth-child(3) {
+    width: 4rem; /* age */
 }
 
-.dropdown-content li:hover {
-    /*background-color: #ddd;*/
-    background-color: red;
+.colonist-report-column h6 span:nth-child(4) {
+    width: 15rem; /* job name */
 }
 
-.dropdown:hover .dropdown-content {
-    display: block;
+.colonist-report-column h6 span:nth-child(5) {
+    width: 25rem; /* job description */
+}
+
+/* recent encounters listing - column widths */
+
+.encounter-report-column h6 span:nth-child(1) {
+    width: 7.5rem; /* encounter ID */
+}
+
+.encounter-report-column h6 span:nth-child(2) {
+    width: 8rem; /* date */
+}
+
+.encounter-report-column h6 span:nth-child(3) {
+    width: 6.5rem; /* colonist ID */
+}
+
+.encounter-report-column h6 span:nth-child(4) {
+    width: 10rem; /* alien type */
+}
+
+.encounter-report-column h6 span:nth-child(5) {
+    width: 30rem; /* action taken */
 }

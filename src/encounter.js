@@ -1,5 +1,11 @@
+/********************************/
+/*  encounter.js (Eric Gregor)  */
+/********************************/
+
 import React, { Component } from 'react';
 import axios from 'axios';
+
+// new alien encounter
 
 class NewEncounter extends Component {
     constructor(props) {
@@ -18,18 +24,12 @@ class NewEncounter extends Component {
     }
 
     componentDidMount() {
-        console.log("Colonists - component mounted.");
-
-        //this.getEncounters();
-        //this.postColonist();
-        //this.getColonists();
-        //this.getJobs();
         this.getAliens();
-        //this.getColonists();
-        //this.postEncounter();
     }
 
     getAliens() {
+        // get alien list for dropdown from api
+
         this.setState({
             message: 'Loading...'
         });
@@ -41,7 +41,6 @@ class NewEncounter extends Component {
                     alien_type: response.data.aliens[0].type,
                     message: ''
                 });
-                console.log(response);
             })
             .catch(function (error) {
                 console.log(error);
@@ -59,12 +58,13 @@ class NewEncounter extends Component {
     }
 
     handleSubmit(event) {
-        console.log('Input values: ' + this.state.colonist_id + ' / ' + this.state.date + ' / ' + this.state.alien_type + ' / ' + this.state.action);
         this.postEncounter();
         event.preventDefault();
     }
 
     postEncounter() {
+        // post new alien encounter through api
+
         this.setState({
             message: 'Submitting...'
         });
@@ -79,7 +79,6 @@ class NewEncounter extends Component {
         })
         .then((response) => {
             if (response) {
-                //console.log(response);
                 this.setState({
                     response: response,
                     message: ''
@@ -92,36 +91,28 @@ class NewEncounter extends Component {
     }
 
     render() {
-        console.log(this.state.response);
         if (this.state.response.data !== undefined) {
+            // confirmation message for api post
+
             let encounter = this.state.response.data.encounter;
-            console.log(encounter);
 
             return (
                 <div className="App">
-                    <p>Your encounter report has been submitted.</p>
                     <br />
-                    <div className="report-line">
-                        <div>
-                            <span><b>Encounter ID</b></span>
-                            <span><b>Date</b></span>
-                            <span><b>Colonist ID</b></span>
-                            <span><b>Alien Type</b></span>
-                            <span><b>Action Taken</b></span>
-                        </div>
-                    </div>
-                    <div className="report-line">
-                        <div>
-                            <span>{encounter.id}</span>
-                            <span>{encounter.date}</span>
-                            <span>{encounter.colonist_id}</span>
-                            <span>{encounter.atype}</span>
-                            <span>{encounter.action}</span>
-                        </div>
+                    <h4>Your encounter report has been submitted.</h4>
+                    <br />
+                    <div className="post-response">
+                        <div><label>Encounter ID:</label><h5>{encounter.id}</h5></div>
+                        <div><label>Date:</label><h5>{encounter.date}</h5></div>
+                        <div><label>Colonist ID:</label><h5>{encounter.colonist_id}</h5></div>
+                        <div><label>Alien Type:</label><h5>{encounter.atype}</h5></div>
+                        <div><label>Action Taken:</label><h5>{encounter.action}</h5></div>
                     </div>
                 </div>
             );
         } else if (this.state.message.length > 0) {
+            // display loading message
+
             return (
                 <div>
                     <br />
@@ -129,8 +120,9 @@ class NewEncounter extends Component {
                 </div>
             );
         } else if (this.state.aliens.length > 0) {
+            // input form for new alien encounter
+
             let aliens = this.state.aliens;
-            console.log(this.state.alien_id);
 
             return (
                 <form onSubmit={(event) => this.handleSubmit(event)}>
@@ -179,6 +171,8 @@ class NewEncounter extends Component {
     }
 }
 
+// recent encounters Listing
+
 class ListEncounters extends Component {
     constructor(props) {
         super(props);
@@ -190,12 +184,12 @@ class ListEncounters extends Component {
     }
 
     componentDidMount() {
-        console.log("Colonists - component mounted.");
-
         this.getEncounters();
     }
 
     getEncounters() {
+        // get encounters listing from api
+
         this.setState({
             message: 'Loading...'
         });
@@ -206,7 +200,6 @@ class ListEncounters extends Component {
                     response: response,
                     message: ''
                 });
-                //console.log(response);
             })
             .catch(function (error) {
                 console.log(error);
@@ -214,40 +207,48 @@ class ListEncounters extends Component {
     }
 
     render() {
-        console.log(this.state.response);
         if (this.state.response.data !== undefined) {
+            // display recent encounters listing
+
             let encounters = this.state.response.data.encounters;
             let recents = encounters.filter((encounter) => encounter.date >= '2017-01-01' );
 
             return (
                 <div className="App">
-                    <br />
-                    <h4>Recent Encounters</h4>
-                    <br />
-                    <div className="report-heading report-column">
-                        <div>
-                            <span><b>Encounter</b></span>
-                            <span><b>Date</b></span>
-                            <span><b>Colonist</b></span>
-                            <span><b>Alien Type</b></span>
-                            <span><b>Action Taken</b></span>
+                    <div className="report-background">
+                        <br />
+                        <h4>Recent Encounters</h4>
+                        <br />
+                        <div className="report-heading encounter-report-column">
+                            <h6>
+                                <span>Encounter</span>
+                                <span>Date</span>
+                                <span>Colonist</span>
+                                <span>Alien Type</span>
+                                <span>Action Taken</span>
+                            </h6>
                         </div>
-                    </div>
-                    <br />
-                    <div className="report-line report-column">
-                        {recents.map(encounter =>
-                            <div key={encounter.id}>
-                                <span>{encounter.id}</span>
-                                <span>{encounter.date.substring(0,10)}</span>
-                                <span>{encounter.colonist_id}</span>
-                                <span>{encounter.atype}</span>
-                                <span>{encounter.action}</span>
-                            </div>
-                        )}
+                        <br />
+                        <div className="report-line encounter-report-column">
+                            {recents.map(encounter =>
+                                <div key={encounter.id}>
+                                    <h6>
+                                        <span>{encounter.id}</span>
+                                        <span>{encounter.date.substring(0,10)}</span>
+                                        <span>{encounter.colonist_id}</span>
+                                        <span>{encounter.atype}</span>
+                                        <span>{encounter.action}</span>
+                                    </h6>
+                                </div>
+                            )}
+                        </div>
+                        <br />
                     </div>
                 </div>
             );
         } else if (this.state.message.length > 0) {
+            // display loading message
+
             return (
                 <div>
                     <br />

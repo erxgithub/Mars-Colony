@@ -1,5 +1,11 @@
+/*******************************/
+/*  colonist.js (Eric Gregor)  */
+/*******************************/
+
 import React, { Component } from 'react';
 import axios from 'axios';
+
+// new colonist registration
 
 class NewColonist extends Component {
     constructor(props) {
@@ -16,18 +22,12 @@ class NewColonist extends Component {
     }
 
     componentDidMount() {
-        console.log("Colonists - component mounted.");
-
-        //this.getEncounters();
-        //this.postColonist();
-        //this.getColonists();
         this.getJobs();
-        //this.getAliens();
-        //this.getColonists();
-        //this.postEncounter();
     }
 
     getJobs() {
+        // get job list for dropdown from api
+
         this.setState({
             message: 'Loading...'
         });
@@ -39,7 +39,6 @@ class NewColonist extends Component {
                     job_id: response.data.jobs[0].id,
                     message: ''
                 });
-                console.log(response);
             })
             .catch(function (error) {
                 console.log(error);
@@ -57,12 +56,13 @@ class NewColonist extends Component {
     }
 
     handleSubmit(event) {
-        console.log('Input values: ' + this.state.name + ' / ' + this.state.age + ' / ' + this.state.job_id);
         this.postColonist();
         event.preventDefault();
     }
 
     postColonist() {
+        // post new colonist registration through api
+
         this.setState({
             message: 'Submitting...'
         });
@@ -76,7 +76,6 @@ class NewColonist extends Component {
         })
         .then((response) => {
             if (response) {
-                //console.log(response);
                 this.setState({
                     response: response,
                     message: ''
@@ -89,19 +88,28 @@ class NewColonist extends Component {
     }
 
     render() {
-        console.log(this.state.response);
         if (this.state.response.data !== undefined) {
+            // confirmation message for api post
+
             let colonist = this.state.response.data.colonist;
-            console.log(colonist);
 
             return (
                 <div className="App">
-                    <div>
-                        <h6>{colonist.id}, {colonist.name}, {colonist.age}, {colonist.job.id}, {colonist.job.name}, {colonist.job.description}</h6>
+                    <br />
+                    <h4>Your colonist registration has been submitted.</h4>
+                    <br />
+                    <div className="post-response">
+                        <div><label>Colonist ID:</label><h5>{colonist.id}</h5></div>
+                        <div><label>Name:</label><h5>{colonist.name}</h5></div>
+                        <div><label>Age:</label><h5>{colonist.age}</h5></div>
+                        <div><label>Job:</label><h5>{colonist.job.name}</h5></div>
+                        <div><label>Description:</label><h5>{colonist.job.description}</h5></div>
                     </div>
                 </div>
             );
         } else if (this.state.message.length > 0) {
+            // display loading message
+
             return (
                 <div>
                     <br />
@@ -109,6 +117,8 @@ class NewColonist extends Component {
                 </div>
             );
         } else if (this.state.jobs.length > 0) {
+            // input form for new colonist registration
+
             let jobs = this.state.jobs;
 
             return (
@@ -151,4 +161,96 @@ class NewColonist extends Component {
     }
 }
 
-export {NewColonist};
+// colonist listing
+
+class ListColonists extends Component {
+    constructor(props) {
+        super(props);
+
+        this.state = {
+            response: [],
+            message: ''
+        }
+    }
+
+    componentDidMount() {
+        this.getColonists();
+    }
+
+    getColonists() {
+        // get colonist listing from api
+
+        this.setState({
+            message: 'Loading...'
+        });
+
+        axios.get('https://red-wdp-api.herokuapp.com/api/mars/colonists')
+            .then((response) => {
+                this.setState({
+                    response: response,
+                    message: ''
+                });
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+    render() {
+        if (this.state.response.data !== undefined) {
+            // display colonist listing
+
+            let colonists = this.state.response.data.colonists;
+
+            return (
+                <div className="App">
+                    <div className="report-background">
+                        <br />
+                        <h4>Colonist Listing</h4>
+                        <br />
+                        <div className="report-heading colonist-report-column">
+                            <h6>
+                                <span>ID</span>
+                                <span>Name</span>
+                                <span>Age</span>
+                                <span>Job Name</span>
+                                <span>Description</span>
+                            </h6>
+                        </div>
+                        <br />
+                        <div className="report-line colonist-report-column">
+                            {colonists.map(colonist =>
+                                <div key={colonist.id}>
+                                    <h6>
+                                        <span>{colonist.id}</span>
+                                        <span>{colonist.name}</span>
+                                        <span>{colonist.age}</span>
+                                        <span>{colonist.job.name}</span>
+                                        <span>{colonist.job.description}</span>
+                                    </h6>
+                                </div>
+                            )}
+                        </div>
+                        <br />
+                    </div>
+                </div>
+            );
+        } else if (this.state.message.length > 0) {
+            // display loading message
+
+            return (
+                <div>
+                    <br />
+                    <h4>{this.state.message}</h4>
+                </div>
+            );
+        } else {
+            return(
+                <div>
+                </div>
+            );
+        }
+    }
+}
+
+export {NewColonist, ListColonists};
