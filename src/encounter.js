@@ -220,25 +220,19 @@ class ListEncounters extends Component {
                         <h4>Recent Encounters</h4>
                         <br />
                         <div className="report-heading encounter-report-column">
-                            <h6>
-                                <span>Encounter</span>
-                                <span>Date</span>
-                                <span>Colonist</span>
-                                <span>Alien Type</span>
-                                <span>Action Taken</span>
-                            </h6>
+                            <ListEncounterHeadings />
                         </div>
                         <br />
                         <div className="report-line encounter-report-column">
                             {recents.map(encounter =>
                                 <div key={encounter.id}>
-                                    <h6>
-                                        <span>{encounter.id}</span>
-                                        <span>{encounter.date.substring(0,10)}</span>
-                                        <span>{encounter.colonist_id}</span>
-                                        <span>{encounter.atype}</span>
-                                        <span>{encounter.action}</span>
-                                    </h6>
+                                    <ListEncounter
+                                        encounter_id={encounter.id}
+                                        encounter_date={encounter.date.substring(0,10)}
+                                        colonist_id={encounter.colonist_id}
+                                        alien_type={encounter.atype}
+                                        action_taken={encounter.action}
+                                    />
                                 </div>
                             )}
                         </div>
@@ -262,6 +256,38 @@ class ListEncounters extends Component {
             );
         }
     }
+}
+
+// display listing headings
+
+class ListEncounterHeadings extends Component {
+  render() {
+    return (
+        <h6>
+            <span>Encounter</span>
+            <span>Date</span>
+            <span>Colonist</span>
+            <span>Alien Type</span>
+            <span>Action Taken</span>
+        </h6>
+    );
+  }
+}
+
+// display listing row
+
+class ListEncounter extends Component {
+  render() {
+    return (
+        <h6>
+            <span>{this.props.encounter_id}</span>
+            <span>{this.props.encounter_date}</span>
+            <span>{this.props.colonist_id}</span>
+            <span>{this.props.alien_type}</span>
+            <span>{this.props.action_taken}</span>
+        </h6>
+    );
+  }
 }
 
 export {NewEncounter, ListEncounters};

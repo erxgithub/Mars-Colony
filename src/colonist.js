@@ -209,25 +209,19 @@ class ListColonists extends Component {
                         <h4>Colonist Listing</h4>
                         <br />
                         <div className="report-heading colonist-report-column">
-                            <h6>
-                                <span>ID</span>
-                                <span>Name</span>
-                                <span>Age</span>
-                                <span>Job Name</span>
-                                <span>Description</span>
-                            </h6>
+                            <ListColonistHeadings />
                         </div>
                         <br />
                         <div className="report-line colonist-report-column">
                             {colonists.map(colonist =>
                                 <div key={colonist.id}>
-                                    <h6>
-                                        <span>{colonist.id}</span>
-                                        <span>{colonist.name}</span>
-                                        <span>{colonist.age}</span>
-                                        <span>{colonist.job.name}</span>
-                                        <span>{colonist.job.description}</span>
-                                    </h6>
+                                    <ListColonist
+                                        colonist_id={colonist.id}
+                                        colonist_name={colonist.name}
+                                        colonist_age={colonist.age}
+                                        job_name={colonist.job.name}
+                                        job_description={colonist.job.description}
+                                    />
                                 </div>
                             )}
                         </div>
@@ -251,6 +245,38 @@ class ListColonists extends Component {
             );
         }
     }
+}
+
+// display listing headings
+
+class ListColonistHeadings extends Component {
+  render() {
+    return (
+        <h6>
+            <span>ID</span>
+            <span>Name</span>
+            <span>Age</span>
+            <span>Job Name</span>
+            <span>Description</span>
+        </h6>
+    );
+  }
+}
+
+// display listing row
+
+class ListColonist extends Component {
+  render() {
+    return (
+        <h6>
+            <span>{this.props.colonist_id}</span>
+            <span>{this.props.colonist_name}</span>
+            <span>{this.props.colonist_age}</span>
+            <span>{this.props.job_name}</span>
+            <span>{this.props.job_description}</span>
+        </h6>
+    );
+  }
 }
 
 export {NewColonist, ListColonists};
