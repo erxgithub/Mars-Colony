@@ -1,4 +1,4 @@
-# Mars Colony Project (Eric Gregor)
+# Mars Colony (Eric Gregor)
 
 Technologies Used:
 
